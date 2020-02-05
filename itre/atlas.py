@@ -17,15 +17,14 @@ class Atlas(object):
         dims = int(len(colvars[0])//n_minima)
         bias_matrix = np.zeros((n_evals,n_evals))
 
-        np.fill_diagonal(bias_matrix,heights[0])
-
         for i in range(n_evals):
             upper_index = int(i*stride)
-            for k in range(upper_index):
+            for k in range(upper_index+1):
                 sum_bias = 0.0
                 for minimum in range(n_minima):
                     start = int(minimum*dims) ; end = int(minimum*dims)+dims
-                    sum_bias += self.kernel(colvars[upper_index,start:end],colvars[k,start:end],sigmas[k,start:end])*heights[k]*thetas[i,minimum]*thetas[k,minimum]
+                    switch = thetas[i,minimum]*thetas[k,minimum]
+                    sum_bias += self.kernel(colvars[upper_index,start:end],colvars[k,start:end],sigmas[k,start:end])*heights[k]*switch
 
                 bias_matrix[i,i] += sum_bias + wall[k]
 
@@ -38,7 +37,8 @@ class Atlas(object):
                 for t in range(lower_index,upper_index):
                     for minimum in range(n_minima):
                         start = int(minimum*dims) ; end = int(minimum*dims)+dims
-                        sum_bias += self.kernel(colvars[ref_index,start:end],colvars[t-1,start:end],sigmas[t-1,start:end])*heights[t-1]*thetas[ref_index,minimum]*thetas[t-1,minimum]
+                        switch = thetas[ref_index,minimum]*thetas[t-1,minimum]
+                        sum_bias += self.kernel(colvars[ref_index,start:end],colvars[t-1,start:end],sigmas[t-1,start:end])*heights[t-1]*switch
 
                     sum_bias += wall[t-1]
 
@@ -56,7 +56,7 @@ class Atlas(object):
         dist2 = np.zeros(dims)
 
         for i in range(n_evals):
-            for k in range(i*stride):
+            for k in range(i*stride+1):
                 sum_bias = 0.0
                 for minimum in range(n_minima):
                     start = int(minimum*dims) ; end = int(minimum*dims)+dims

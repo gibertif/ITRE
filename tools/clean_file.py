@@ -6,11 +6,11 @@ parser.add_argument('--file','-f',help='file to clean')
 parser.add_argument('--start','-s',help='First column to retain')
 parser.add_argument('--end','-r',help='First columns to discards')
 parser.add_argument('--columns','-c',type=int,nargs='+',help='list of columns to use')
-parser.add_argument('--discard','-d',help='discard rows after this steps')
+parser.add_argument('--discard','-d',type=int,help='discard rows before this steps')
+parser.add_argument('--keep','-k',type=int,help='keep rows before this steps')
 parser.add_argument('--output','-o',help='name of the output file')
 
 args = parser.parse_args()
-
 data = np.loadtxt(args.file)
 
 if args.output:
@@ -21,10 +21,15 @@ else:
 if args.discard:
     top = args.discard
 else:
-    top = len(data)
+    top = 0
 
-print(top)
-if args.columns:
-    np.savetxt(file_out,data[:top,args.columns])
+if args.keep:
+    bottom = args.keep
 else:
-    np.savetxt(file_out,data[:top,args.start:args.end])
+    bottom = len(data)
+
+
+if args.columns:
+    np.savetxt(file_out,data[top:bottom,args.columns])
+else:
+    np.savetxt(file_out,data[top:bottom,args.start:args.end])

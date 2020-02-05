@@ -13,7 +13,7 @@ class Metadynamics(object):
         dist = (a-b)/c
         dist = 0.5 * dist.dot(dist)
         return np.exp(-dist)
-
+        
     @staticmethod
     @nb.jit
     def calculate_bias_matrix_nb(colvars,sigmas,heights,wall,n_evals,stride,dims):
