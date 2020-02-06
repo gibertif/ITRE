@@ -30,19 +30,19 @@ class Atlas(object):
 
         for i in range(n_evals):
             ref_index= int(i*stride)
-            for j in range(i+1,n_evals):
+            for j in range(i,n_evals-1):
                 lower_index = int(j*stride)
                 upper_index = int((j+1)*stride)
                 bias_sum = 0.0
                 for t in range(lower_index,upper_index):
                     for minimum in range(n_minima):
                         start = int(minimum*dims) ; end = int(minimum*dims)+dims
-                        switch = thetas[ref_index,minimum]*thetas[t-1,minimum]
-                        sum_bias += self.kernel(colvars[ref_index,start:end],colvars[t-1,start:end],sigmas[t-1,start:end])*heights[t-1]*switch
+                        switch = thetas[ref_index,minimum]*thetas[t,minimum]
+                        sum_bias += self.kernel(colvars[ref_index,start:end],colvars[t,start:end],sigmas[t,start:end])*heights[t]*switch
 
-                    sum_bias += wall[t-1]
+                    sum_bias += wall[t]
 
-                bias_matrix[j,i] = bias_matrix[j-1,i] + bias_sum
+                bias_matrix[j+1,i] = bias_matrix[j,i] + bias_sum
 
         return bias_matrix
 
@@ -67,17 +67,17 @@ class Atlas(object):
                 bias_matrix[i,i] += sum_bias + wall[k]
 
         for i in range(n_evals):
-            for j in range(i+1,n_evals):
+            for j in range(i,n_evals-1):
                 bias_sum = 0.0
                 for t in range(j*stride,(j+1)*stride):
                     for minimum in range(n_minima):
                         start = int(minimum*dims) ; end = int(minimum*dims)+dims
-                        dist = (colvars[i*stride,start:end]-colvars[t-1,start:end])/sigmas[t-1,start:end]
+                        dist = (colvars[i*stride,start:end]-colvars[t,start:end])/sigmas[t,start:end]
                         dist2 = 0.5 * dist.dot(dist)
-                        sum_bias += np.exp(-dist2)*heights[t-1]*thetas[i*stride,minimum]*thetas[t-1,minimum]
+                        sum_bias += np.exp(-dist2)*heights[t]*thetas[i*stride,minimum]*thetas[t,minimum]
 
-                    sum_bias += wall[t-1]
+                    sum_bias += wall[t]
 
-                bias_matrix[j,i] = bias_matrix[j-1,i] + bias_sum
+                bias_matrix[j+1,i] = bias_matrix[j,i] + bias_sum
 
         return bias_matrix
