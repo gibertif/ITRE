@@ -19,7 +19,6 @@ class Metadynamics(object):
     def calculate_bias_matrix_nb(colvars,sigmas,heights,wall,n_evals,stride,dims):
         bias_matrix = np.zeros((n_evals,n_evals))
         dist = np.zeros(dims)
-        dist2 = np.zeros(dims)
 
         for i in range(n_evals):
             for k in range(i*stride):

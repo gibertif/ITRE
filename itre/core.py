@@ -19,6 +19,7 @@ class Itre(object):
 
         self.__setattr__('stride',10)
         self.__setattr__('kT',1.0)
+        self.__setattr__('beta',1.0)
         self.__setattr__('iterations',20)
         self.__setattr__('starting_height',1.0)
         self.__setattr__('has_matrix',False)
@@ -58,6 +59,7 @@ class Itre(object):
         self.__setattr__('wall',wall)
         self.__setattr__('sigmas',sigmas)
         self.__setattr__('heights',heights)
+        self.__setattr__('beta',self.kT)
 
         if self.has_thetas:
             self.__setattr__('thetas',thetas)
@@ -88,13 +90,13 @@ class Itre(object):
 
         iter = 0
         self.ct = np.zeros((self.iterations,self.n_evals))
-        matw = np.tril(np.exp(-self.bias_matrix))
+        matw = np.tril(np.exp(-self.bias_matrix*self.beta))
         for iteration in range(1,self.iterations):
             offset = self.instantaneous_bias-self.ct[iteration-1]
-            vec1 = np.exp(offset)
+            vec1 = np.exp(offset*self.beta)
             res = matw.dot(vec1)
             norm = np.cumsum(vec1)
-            self.ct[iteration] = -np.log(res/norm)
+            self.ct[iteration] = -self.kT*np.log(res/norm)
 
 
 if __name__ == '__main__':
