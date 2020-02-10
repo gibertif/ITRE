@@ -25,6 +25,7 @@ for ss in range(2,end+3,end):
    new_it.wall = np.zeros(ss)
    new_it.sigmas=sigmas[:ss]
    new_it.thetas=thetas[:ss]
+   new_it.has_thetas=True
    new_it.heights=heights[:ss]
    new_it.stride=stride
    new_it.n_evals=int(ss/new_it.stride)

@@ -2,17 +2,49 @@ import numpy as np
 import numba as nb
 
 class Atlas(object):
-    """docstring for Atlas."""
-
+    """This class implement the calculation of the bias matrix for an ATLAS
+       calculation."""
     def __init__(self):
         super(Atlas, self).__init__()
 
     def kernel(self,a,b,c):
+        """This function evaluate the gaussian between two points given the
+           covariance
+
+           Parameters
+           ----------
+           a : first point (either a float or a array of float)
+           b : second point (either a float or a array of float)
+           c : covariance (either a float or a array of float)
+
+           Returns
+           -------
+           the value of the Gaussian overlap
+        """
         dist = (a-b)/c
         dist = 0.5 * dist.dot(dist)
         return np.exp(-dist)
 
     def calculate_bias_matrix(self,colvars,sigmas,heights,wall,thetas,n_evals,stride):
+        """
+        Evaluate the bias matrix by looping over time. A recursive formula is
+        used so that the evaluation scale as T*(T-1) where T is the number of
+        evaluation required from the ITRE class.
+
+        Parameters
+        ----------
+        colvars : the values of the collective variables
+        sigmas : the covariances use to evaluate the overlap kernel
+        heights : the heights of the hills deposited in the simulations
+        wall : the values of the restraint acting in the simulation
+        thetas : the values of the activation function theta for ATLAS
+        n_evals :  the number of evaluation to do (T in here)
+        stride : the stride between two different evaluation.
+
+        Returns
+        -------
+        bias_matrix : a T*T float matrix containing the lagged potential matrix
+        """
         n_minima = len(thetas[0])
         dims = int(len(colvars[0])//n_minima)
         bias_matrix = np.zeros((n_evals,n_evals))

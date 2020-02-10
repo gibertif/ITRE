@@ -1,9 +1,9 @@
-This modules contains a python code that can be used to calculate c(t) starting form a metadynamics or an atlas calculation.
+# ITRE: Iterative Trajectory Reweight
 
-There are minimalist examples in the **examples** folder that illustrate how to use the module, as well as the *clean_files.py* scripts in the tool directory.
+This python modules contains an implementation of the ITRE algorithm presented in _Giberti, F., Cheng, B., Tribello, G. A., & Ceriotti, M._ (2019). _Iterative unbiasing of quasi-equilibrium sampling._ **Journal of chemical theory and computation.**
 
-The code can be used with *plain* python, but is not very fast, or with *numba*, for which there is a considerable speed up.
+The current implementation scales as T*(T-1), with T the number of evaluation required to calculate c(t). All the methods have an implementation in plain python, as well as an implementation in numba (which is required).
 
-I am planning of implementing a version with *mpi4py* too to further increase the scaling of the method.
+We suggest to use the module with a *virtual environment*, and install all the packages directly from the *requirements.txt* via *pip*.
 
-Keep an eye on this!
+To understand how to use the class, I suggest to check the examples contained in the *examples* folder.
