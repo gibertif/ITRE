@@ -152,7 +152,7 @@ class Itre(object):
         self.__setattr__('wall',wall)
         self.__setattr__('sigmas',sigmas)
         self.__setattr__('heights',heights)
-        self.__setattr__('beta',self.kT)
+        self.__setattr__('beta',1/self.kT)
 
         if self.has_thetas:
             self.__setattr__('thetas',thetas)
@@ -290,6 +290,8 @@ class Itre(object):
         If the bias matrix has not been calculate, calculate the matrix and
         then proceed in the self consistent cycle.
         """
+        self.__setattr__('beta',1/self.kT)
+
         if not self.has_periodicity:
             self.set_boundaries()
 
