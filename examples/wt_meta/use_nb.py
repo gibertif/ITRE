@@ -18,6 +18,7 @@ for ss in range(1000,len(colvars),100):
     new_it=itre.Itre()
     new_it.use_numba=True
     new_it.colvars=colvars[:ss]
+    new_it.kT=1.0
 
     new_it.wall=np.zeros(len(colvars[:ss]))
     new_it.sigmas=sigmas[:ss]
