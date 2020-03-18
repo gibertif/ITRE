@@ -1,6 +1,7 @@
 import numpy as np 
+import sys
+sys.path.append('../../')
 import itre
-import matplotlib.pyplot as plt 
 
 stride=20
 data = np.loadtxt('LOWD_CVS')
@@ -45,11 +46,4 @@ new_it.calculate_c_t()
 
 np.savetxt('c_t.dat',new_it.ct[-1].T)
 np.savetxt('instantaneous_bias.dat',new_it.instantaneous_bias)
-
-bias = np.loadtxt('at.gbias',usecols=1,skiprows=2)
-
-plt.plot(bias[::stride],label='Atlas istantaneous bias')
-plt.plot(new_it.instantaneous_bias,label='ITRE istantaneous bias')
-plt.legend()
-plt.show()
 
