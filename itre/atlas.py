@@ -4,7 +4,7 @@ import numba as nb
 class Atlas(object):
     """This class implement the calculation of the bias matrix for an ATLAS
        calculation."""
-    def __init__(self,residual_weights):
+    def __init__(self):
         super(Atlas, self).__init__()
 
     def kernel(self,a,b,c,boundaries,res_weights,comp_weights):
