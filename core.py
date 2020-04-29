@@ -46,7 +46,6 @@ class Itre(object):
         self.__setattr__('has_thetas',False)
         self.__setattr__('use_numba',False)
         self.__setattr__('has_periodicity',False)
-        self.__setattr__('has_residual',False)
         self.__setattr__('boundary_lengths',None)
 
     def print_dict(self):
@@ -74,8 +73,6 @@ calculation',
 on the simulation.',
         'has_thetas':'for an ATLAS calculation set True if we set thetas \
 directly, not from a json object',
-        'has_residual':'for an ATLAS calculation set True if you used the  \
-residual True keyword',
         'use_numba':'wether to use numba or not.',
         'boundaries_file':'this directive tells Itre to read a file from which \
 the boundaries of each CVs are readed. If a CVs is \
@@ -175,14 +172,14 @@ assumed to be unbounded. This key has priority over \
         """
         Get the number of CVs passed to the file
         """
-        try:
-            ln = len(array[0])
-        except:
-            try:
-                ln = 1
-            except:
-                raise ValueError("Unable to get the number of colvars")
-
+        try: 
+            ln = len(array[0]) 
+        except: 
+            try: 
+                ln = 1 
+            except: 
+                raise ValueError("Unable to get the number of colvars") 
+        
         return ln
 
 
@@ -277,14 +274,9 @@ assumed to be unbounded. This key has priority over \
                       lagged potential. The instantaneous potential is
                       equal to the diagonal of this matrix
         """
-
         if self.has_thetas:
             printitre(" You are reweighing an ATLAS calculations ")
             bias_scheme = Atlas()
-            residual_weights = 0.0
-            if self.has_residual:
-                residual_weights = 1.0
-            printitre(" with the residual activated ")
             if self.use_numba:
                 printitre("With numba enabled.")
                 matrix = bias_scheme.calculate_bias_matrix_nb(self.colvars,
@@ -295,8 +287,7 @@ assumed to be unbounded. This key has priority over \
                                                               self.thetas,
                                                               self.n_evals,
                                                               self.stride,
-                                                              self.n_cvs,
-                                                              residual_weights)
+                                                              self.n_cvs)
             else:
                 printitre("With numba disabled")
                 matrix = bias_scheme.calculate_bias_matrix(self.colvars,
@@ -306,8 +297,7 @@ assumed to be unbounded. This key has priority over \
                                                            self.wall,
                                                            self.thetas,
                                                            self.n_evals,
-                                                           self.stride,
-                                                           residual_weights)
+                                                           self.stride)
         else:
             printitre(" You are reweighing a METAD calculations ")
             bias_scheme = Metadynamics()
