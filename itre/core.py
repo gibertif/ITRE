@@ -212,9 +212,9 @@ assumed to be unbounded. This key has priority over \
         float_boundaries = []
         float_lengths = []
 
-        for k in range(self.n_cvs):
-            el1 = boundaries[2*k]
-            el2 = boundaries[2*k+1]
+        if self.n_cvs == 1:
+            el1 = boundaries[0]
+            el2 = boundaries[1]
 
             if el1 == 'unbounded' and el2 != 'unbounded' \
             or el2 == 'unbounded' and el1 != 'unbounded':
@@ -222,22 +222,51 @@ assumed to be unbounded. This key has priority over \
                                   one value. It has to be periodic on both side.")
 
             if el1 == 'unbounded':
-                min = np.amin(self.colvars.T[k])
-                max = 5*np.amax(self.colvars.T[k])
+                mn = np.amin(self.colvars)
+                mx = 5*np.amax(self.colvars)
 
             if el1 == 'bounded':
-                min = np.amin(self.colvars.T[k])
+                mn = np.amin(self.colvars)
             elif isinstance(el1,float):
-                min = el1
+                mn = el1
 
             if el2 == 'bounded':
-                max = np.amin(self.colvars.T[k])
+                mx = np.amin(self.colvars)
             elif isinstance(el2,float):
-                max = el2
+                mx = el2
 
-            float_boundaries.append(min)
-            float_boundaries.append(max)
-            float_lengths.append(max-min)
+            float_boundaries.append(mn)
+            float_boundaries.append(mx)
+            float_lengths.append(mx-mn)
+
+        else:
+
+            for k in range(self.n_cvs):
+                el1 = boundaries[2*k]
+                el2 = boundaries[2*k+1]
+
+                if el1 == 'unbounded' and el2 != 'unbounded' \
+                or el2 == 'unbounded' and el1 != 'unbounded':
+                    raise ValueError("You cannot have a CVs that is periodic only on\
+                                      one value. It has to be periodic on both side.")
+
+                if el1 == 'unbounded':
+                    mn = np.amin(self.colvars.T[k])
+                    mx = 5*np.amax(self.colvars.T[k])
+
+                if el1 == 'bounded':
+                    mn = np.amin(self.colvars.T[k])
+                elif isinstance(el1,float):
+                    mn = el1
+
+                if el2 == 'bounded':
+                    mx = np.amin(self.colvars.T[k])
+                elif isinstance(el2,float):
+                    mx = el2
+
+                float_boundaries.append(mn)
+                float_boundaries.append(mx)
+                float_lengths.append(mx-mn)
 
         float_boundaries = np.array(float_boundaries)
         float_lengths = np.array(float_lengths)
