@@ -10,7 +10,7 @@ heights = data[1:,-1]
 sigmas = np.ones(colvars.shape)*0.1
 
 th = np.loadtxt('THETA')
-thetas = th[1:,1:-1]
+thetas = th[1:,1:]
 wall = np.zeros(len(colvars))
 
 limit = 100
@@ -19,7 +19,7 @@ dumb_it=itre.Itre()
 dumb_it.use_numba=True
 dumb_it.kT=300
 dumb_it.colvars=colvars[:limit]
-dumb_it.set_boundaries(np.array([-np.pi,np.pi]*len(colvars[0])))
+dumb_it.set_boundaries(np.array([-np.pi,np.pi]*8))
 dumb_it.wall = wall
 dumb_it.sigmas=sigmas[:limit]
 dumb_it.thetas=thetas[:limit]
@@ -34,7 +34,7 @@ new_it=itre.Itre()
 new_it.kT=300
 new_it.use_numba=True
 new_it.colvars=colvars
-new_it.set_boundaries(np.array([-np.pi,np.pi]*len(colvars[0])))
+new_it.set_boundaries(np.array([-np.pi,np.pi]*8))
 new_it.wall = wall
 new_it.sigmas=sigmas
 new_it.thetas=thetas
